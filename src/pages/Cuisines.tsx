@@ -2,7 +2,6 @@ import styled from "styled-components"
 import {useEffect, useState} from 'react'
 import {motion} from 'framer-motion'
 import { Link, useParams } from "react-router-dom";
-
 function Cuisines() {
 
   interface Cuisine{
@@ -30,12 +29,14 @@ function Cuisines() {
   return (
     <Grid>
       {cuisine.map((item)=>{
-        return(
-          <Card key={item.id}>
-            <img src={item.image} alt="" />
-            <h4>{item.title}</h4>
-          </Card>
-        )
+        return (
+          <Link to={`/recipes/${item.id}`}>
+            <Card key={item.id}>
+              <img src={item.image} alt="" />
+              <h4>{item.title}</h4>
+            </Card>
+          </Link>
+        );
       })}
     </Grid>
   )

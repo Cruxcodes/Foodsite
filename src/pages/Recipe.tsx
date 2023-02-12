@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 function Recipe() {
   const [details,setDetails] = useState<any>({})
+  const [activeTab,setActiveTab] = useState<string>("instructions");
   const { id } = useParams();
 
   const getRecipe = async () => {
@@ -11,23 +12,55 @@ function Recipe() {
       `https://api.spoonacular.com/recipes/${id}/information?apiKey=${process.env.REACT_APP_API_KEY}`
     );
     const data = await response.json();
+    setDetails(data)
     console.log(data);
+    
   };
 
   useEffect(() => {
     getRecipe();
-  }, []);
+  }, [id]);
 
-  return <Details>
-    <div>
-      <h2>{details.title}</h2>
-    </div>
+  return (
+    <Details>
+      <div>
+        <h2>{details.title}</h2>
+        <img src={details.image} alt="" />
+      </div>
+      <Info>
+        <Button
+          className={activeTab === "instructions" ? "active" : ""}
+          onClick={() => setActiveTab("instructions")}
+        >
+          Instructions
+        </Button>
+        <Button
+          className={activeTab === "ingredients" ? "active" : ""}
+          onClick={() => setActiveTab("ingredients")}
+        >
+          Ingredients
+        </Button>
 
-  </Details>;
+        {activeTab === "instructions" && (
+          <div>
+            <h3 dangerouslySetInnerHTML={{ __html: details.summary }} />
+            <h3 dangerouslySetInnerHTML={{ __html: details.instructions }}></h3>
+          </div>
+        )}
+        {activeTab === "ingredients" && (
+          <ul>
+            {details.extendedIngredients.map((ingredient : any)=>{
+              return <li key={ingredient.id}>{ingredient.original}</li>
+            })}
+          </ul>
+        )}
+      </Info>
+    </Details>
+  );
 }
 
 const Details = styled.div`
-  margin-top: 10rem;
+  margin-top: 2rem;
   margin-bottom: 5rem;
   display:flex;
   .active{

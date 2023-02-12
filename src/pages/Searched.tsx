@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-
+import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 function Searched() {
   const { search } = useParams();
@@ -14,11 +14,10 @@ function Searched() {
     );
     const data = await response.json();
     setResult(data.results);
-    setLoading(true)
+    setLoading(true);
     if (data.results.length > 0) {
       setLoading(false);
     }
-    console.log(data.results);  
   };
 
   useEffect(() => {
@@ -33,10 +32,12 @@ function Searched() {
         <Grid>
           {results.map((item) => {
             return (
-              <Card key={item.id}>
-                <img src={item.image} alt="" />
-                <h4>{item.title}</h4>
-              </Card>
+              <Link to={`/recipes/${item.id}`}>
+                <Card key={item.id}>
+                  <img src={item.image} alt="" />
+                  <h4>{item.title}</h4>
+                </Card>
+              </Link>
             );
           })}
         </Grid>
